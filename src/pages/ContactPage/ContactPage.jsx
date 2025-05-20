@@ -1,10 +1,11 @@
 import React from 'react'
 import Navbar from '../../components/Navbar/Navbar.jsx'
-
-const Home = () => {
+const ContactPages = () => {
   return (
-    <Navbar />
+    <>
+      <Navbar />
+    </>
   )
 }
 
-export default Home
+export default ContactPages
