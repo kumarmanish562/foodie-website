@@ -57,25 +57,25 @@ export const stats = [
         number: '10M+',
         label: 'Deliveries',
         icon: GiFoodTruck,
-        gradient: 'from-amber-500 via-orange-400 to-yellow-600',
+        gradient: 'from-green-500 via-orange-400 to-yellow-600',
     },
     {
         number: '98%',
         label: 'Satisfaction',
         icon: FaHeart,
-        gradient: 'from-rose-500 via-amber-500 to-yellow-500',
+        gradient: 'from-rose-500 via-green-500 to-yellow-500',
     },
     {
         number: '500+',
         label: 'Cities',
         icon: FaLeaf,
-        gradient: 'from-emerald-500 via-amber-500 to-yellow-600',
+        gradient: 'from-emerald-500 via-green-500 to-yellow-600',
     },
     {
         number: '24/7',
         label: 'Support',
         icon: FaRegClock,
-        gradient: 'from-amber-500 via-orange-400 to-rose-500',
+        gradient: 'from-green-500 via-orange-400 to-rose-500',
     },
 ];
 
@@ -123,7 +123,7 @@ export const teamMembers = [
 
 // ABOUT HOMEPAGE
 export const aboutfeature = [
-    { icon: FaBolt, title: "Instant Ordering", text: "Seamless digital experience", color: "from-amber-400 to-orange-500" },
+    { icon: FaBolt, title: "Instant Ordering", text: "Seamless digital experience", color: "from-green-400 to-orange-500" },
     { icon: FaRegClock, title: "Always Open", text: "24/7 premium service", color: "from-rose-400 to-pink-600" },
     { icon: FaCalendarCheck, title: "Exclusive Booking", text: "Priority reservations", color: "from-emerald-400 to-cyan-600" },
     { icon: FaFire, title: "Signature Dishes", text: "Chef's special creations", color: "from-purple-400 to-indigo-600" }
@@ -152,8 +152,8 @@ export const socialIcons = [
 ];
 
 // LOGIN 
-export const inputBase = "w-full rounded-lg bg-[#2D1B0E] text-amber-100 placeholder-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-600";
-export const iconClass = "absolute top-1/2 transform -translate-y-1/2 left-3 text-amber-400";
+export const inputBase = "w-full rounded-lg bg-[#2D1B0E] text-green-100 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-600";
+export const iconClass = "absolute top-1/2 transform -translate-y-1/2 left-3 text-green-400";
 
 // CONTACT
 export const contactFormFields = [

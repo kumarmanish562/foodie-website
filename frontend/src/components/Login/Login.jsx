@@ -62,7 +62,7 @@ const Login = ({ onLoginSuccess, onClose }) => {
         className={`fixed top-4 z-50 transition-all duration-300 ${showToast ? 'translate-y-0 opacity-100' : '-translate-y-20 opacity-0'
           }`}
       >
-        <div className="bg-green-600 text-white px-4 py-3 rounded-md shadow-lg items-center flex gap-2 text-sm">
+        <div className="bg-red-800 text-white px-4 py-3 rounded-md shadow-lg items-center flex gap-2 text-sm">
           <FaCheckCircle className="flex-shrink-0" />
           <span>Login Successful</span>
         </div>
@@ -79,7 +79,7 @@ const Login = ({ onLoginSuccess, onClose }) => {
             placeholder="Username"
             value={formData.username}
             onChange={handleChange}
-            className={`${inputBase} pl-10 pr-4 py-3`}
+            className={`${inputBase} pl-10 pr-4 py-3 bg-[#011f02]  text-green-100 placeholder-green-400 `}
           />
         </div>
 
@@ -92,12 +92,12 @@ const Login = ({ onLoginSuccess, onClose }) => {
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
-            className={`${inputBase} pl-10 pr-4 py-3`}
+            className={`${inputBase} pl-10 pr-4 py-3 bg-[#011f02]  text-green-100 placeholder-green-400 `}
           />
           <button
             type="button"
             onClick={toggleShowPassword}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-amber-400"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-[#011f02] text-green-400"
           >
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
@@ -110,14 +110,14 @@ const Login = ({ onLoginSuccess, onClose }) => {
               name="rememberMe"
               checked={formData.rememberMe}
               onChange={handleChange}
-              className='from-checkbox h-5 w-5 text-amber-600 bg-[#2d1B0E] border-amber-400 rounded focus:ring-amber-600'
+              className='from-checkbox h-5 w-5 text-green-600 bg-[#011f02]  border-green-400 rounded focus:ring-green-600'
             />
-            <span className='ml-2 text-amber-100'>Remember me</span>
+            <span className='ml-2 text-green-100'>Remember me</span>
           </label>
         </div>
         {/* Submit Button */}
         <button
-          className='w-full py-3 bg-gradient-to-r from-amber-400 to-amber-600 text-[#2D1B0E] font-bold rounded-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform'
+          className='w-full py-3 bg-gradient-to-r from-green-400 to-green-600 text-[#022709] font-bold rounded-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform'
         >
           Sign In <FaArrowRight />
         </button>
@@ -129,7 +129,7 @@ const Login = ({ onLoginSuccess, onClose }) => {
         <Link
           to='/signup'
           onClick={onClose}
-          className='inline-flex items-center gap-2 text-amber-400 hover:text-amber-600 transition-colors'
+          className='inline-flex items-center gap-2 text-green-400 hover:text-green-600 transition-colors'
         >
           <FaUserPlus /> Create New Account
         </Link>

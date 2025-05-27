@@ -7,7 +7,7 @@ const About = () => {
   const [hoveredStat, setHoveredStat] = useState(null);
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-[#1a120b] via-[#3c2a21] to-[#1a120b] text-amber-50 overflow-hidden relative'>
+     <div className='min-h-screen bg-gradient-to-br bg-[#052512] via-[#033f12] to-[#021a0b] text-green-50 overflow-hidden relative'>
       <div className='absolute inset-0 opacity-10 mix-blend-soft-light' />
 
       <motion.section
@@ -17,7 +17,7 @@ const About = () => {
       >
         <div className='max-w-4xl mx-auto'>
           <motion.h1
-            className='text-5xl sm:text-6xl md:text-7xl font-bold mb-4 font-serif bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-yellow-400'
+            className='text-5xl sm:text-6xl md:text-7xl font-bold mb-4 font-serif bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-green-400'
           >
             Culinary Express
           </motion.h1>
@@ -40,9 +40,9 @@ const About = () => {
                 transition={{ delay: i * 0.2 }}
                 className='relative group '
               >
-                <div className='absolute -inset-1 bg-gradient-to-br from-amber-600/30 to-amber-500/30 rounded-xl blur-lg opacity-50 group-hover:opacity-80 transition-opacity duration-500' />
+                <div className='absolute -inset-1 bg-gradient-to-br from-green-600/30 to-green-500/30 rounded-xl blur-lg opacity-50 group-hover:opacity-80 transition-opacity duration-500' />
 
-                <div className='relative bg-[#3c2a21]/90 backdrop-blur-lg rounded-3xl overflow-hidden border border-amber-600/30 hover:border-amber-500 transition-all duration-300 h-full'>
+                <div className='relative bg-[#052512]/90 backdrop-blur-lg rounded-3xl overflow-hidden border border-green-600/30 hover:border-green-500 transition-all duration-300 h-full'>
                   <div className='relative h-64 overflow-hidden'>
                     <motion.img
                       src={f.img}
@@ -52,17 +52,17 @@ const About = () => {
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.4 }}
                     />
-                    <div className='absolute inset-0 bg-gradient-to-t from-[#1a120b] via-transparent to-transparent' />
+                    <div className='absolute inset-0 bg-gradient-to-t from-[#000701] via-transparent to-transparent' />
                   </div>
                   <div className='p-8'>
                     <motion.div
-                      className='text-amber-500 mb-4 inline-block'
+                       className='text-green-500 mb-4 inline-block'
                       whileHover={{ rotate: 15 }}
                     >
-                      <Icon className='w-12 h-12 text-amber-500' />
+                      <Icon className='w-12 h-12 text-green-500' />
                     </motion.div>
-                    <h3 className='text-2xl font-bold mb-2 text-amber-100'>{f.title}</h3>
-                    <p className='text-amber-100/80'>{f.text}</p>
+                    <h3 className='text-2xl font-bold mb-2 text-green-100'>{f.title}</h3>
+                    <p className='text-green-100/80'>{f.text}</p>
                   </div>
                 </div>
               </motion.div>
@@ -71,7 +71,7 @@ const About = () => {
         </div>
         </section>
 
-<section className='py-16 px-4 md:px-8 bg-gradient-to-br from-[#1a120b] to-[#3c2a21]/90'>
+<section className='py-16 px-4 md:px-8 bg-gradient-to-br from-[#010c02] to-[#052512]/90'>
   <div className='max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8'>
     {stats.map((s, i) => {
       const Icon = s.icon;
@@ -102,38 +102,38 @@ const About = () => {
               }
             }}
           >
-            <div className='relative h-full bg-[#3c2a21]/40 backdrop-blur-lg rounded-xl border-2 border-amber-600/30 p-6 overflow-hidden transition-all duration-300'>
+            <div className='relative h-full bg-[#052512]/40 backdrop-blur-lg rounded-xl border-2 border-green-600/30 p-6 overflow-hidden transition-all duration-300'>
               <motion.div
                 className='absolute inset-0 rounded-xl'
                 animate={{
                   background: [
-                    'linear-gradient(45deg, #3c2a21 0%, #1a120b 50%, #3c2a21 100%)',
-                    'linear-gradient(45deg, #3c2a21 0%, #1a120b 80%, #3c2a21 100%)',
-                    'linear-gradient(45deg, #3c2a21 0%, #1a120b 50%, #3c2a21 100%)'
+                    'linear-gradient(45deg, #052512 0%, #1a120b 50%, #052512 100%)',
+                    'linear-gradient(45deg, #052512 0%, #1a120b 80%, #052512 100%)',
+                    'linear-gradient(45deg, #052512 0%, #1a120b 50%, #052512 100%)'
                   ]
                 }}
                 transition={{ duration: 6, repeat: Infinity }}
               />
 
-              <div className='absolute inset-0 rounded-xl shadow-lg shadow-amber-900/20' />
+              <div className='absolute inset-0 rounded-xl shadow-lg shadow-green-900/20' />
 
               <div className='relative z-10 h-full flex flex-col items-center justify-center'>
                 <motion.div
-                  className='mb-4 p-3 rounded-full bg-amber-900/30 border border-amber-700/30'
+                  className='mb-4 p-3 rounded-full bg-green-900/30 border border-green-700/30'
                   animate={{
                     scale: hoveredStat === i ? 1.1 : 1,
                     rotate: hoveredStat === i ? 10 : 0
                   }}
                 >
-                  <Icon className='w-8 h-8 text-amber-500/90' />
+                  <Icon className='w-8 h-8 text-green-500/90' />
                 </motion.div>
 
-                <div className='text-4xl font-bold mb-1 bg-clip-text bg-gradient-to-r from-amber-200 to-amber-400 text-transparent'>
+                <div className='text-4xl font-bold mb-1 bg-clip-text bg-gradient-to-r from-green-200 to-green-400 text-transparent'>
                   {s.number}
                 </div>
 
                 <motion.div
-                  className='text-sm uppercase tracking-widest font-medium text-amber-100/80'
+                  className='text-sm uppercase tracking-widest font-medium text-green-100/80'
                   animate={{
                     letterSpacing: hoveredStat === i ? '0.15em' : '0.1em',
                     textShadow: hoveredStat === i ? '0 0 8px rgba(245,158,11,0.4)' : 'none'
@@ -144,14 +144,14 @@ const About = () => {
               </div>
 
               <motion.div
-                className='absolute inset-0 bg-amber-900/10 rounded-xl'
+                className='absolute inset-0 bg-green-900/10 rounded-xl'
                 animate={{ opacity: hoveredStat === i ? 1 : 0 }}
               />
             </div>
           </motion.div>
 
           <motion.div
-            className='absolute inset-x-4 bottom-0 h-8 bg-amber-900/30 blur-xl rounded-full'
+            className='absolute inset-x-4 bottom-0 h-8 bg-green-900/30 blur-xl rounded-full'
             animate={{
               opacity: hoveredStat === i ? 0.4 : 0.2,
               scale: hoveredStat === i ? 0.9 : 0.8
@@ -163,20 +163,14 @@ const About = () => {
   </div>
 </section>
 
-
-
-
-
-
-
 <section className='py-16 px-4 md:px-8 relative'>
   <div className='max-w-7xl mx-auto'>
     <motion.h2
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      className='text-4xl font-serif sm:text-5xl md:text-6xl font-bold text-center text-amber-100'
+       className='text-4xl font-serif sm:text-5xl md:text-6xl font-bold text-center text-green-100'
     >
-      Meet Our <span className='text-amber-500'>Culinary Artists</span>
+      Meet Our <span className='text-green-500'>Culinary Artists</span>
     </motion.h2>
 
     <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 lg:gap-12 mt-12'>
@@ -189,7 +183,7 @@ const About = () => {
           transition={{ delay: m.delay }}
           className='relative group'
         >
-          <div className='relative h-full bg-[#3c2a21]/90 backdrop-blur-lg rounded-3xl overflow-hidden border-2 border-amber-600/30 hover:border-amber-500 transition-all duration-500 shadow hover:shadow-2xl hover:shadow-amber-500/20'>
+          <div className='relative h-full bg-[#052512]/90 backdrop-blur-lg rounded-3xl overflow-hidden border-2 border-green-600/30 hover:border-green-500 transition-all duration-500 shadow hover:shadow-2xl hover:shadow-green-500/20'>
             <div className='relative h-64 sm:h-72 md:h-96 overflow-hidden'>
               <motion.img
                 src={m.img}
@@ -203,11 +197,11 @@ const About = () => {
 
             <div className='p-8 text-center flex flex-col h-[calc(100%-24rem)]'>
               <div className='mb-4'>
-                <h3 className='text-3xl font-bold mb-2 text-amber-100'>{m.name}</h3>
-                <p className='text-amber-500 text-lg font-medium font-cursive'>{m.role}</p>
+                <h3 className='text-3xl font-bold mb-2 text-green-100'>{m.name}</h3>
+                <p className='text-green-500 text-lg font-medium font-cursive'>{m.role}</p>
               </div>
 
-              <p className='text-amber-100/80 text-lg font-cursive flex-grow'>{m.bio}</p>
+            <p className='text-green-100/80 text-lg font-cursive flex-grow'>{m.bio}</p>
 
               <motion.div
                 className='flex justify-center gap-4 pt-6'
@@ -227,7 +221,7 @@ const About = () => {
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-amber-500 hover:text-amber-400 transition-colors duration-300 hover:scale-110"
+                     className="text-green-500 hover:text-green-400 transition-colors duration-300 hover:scale-110"
                     >
                       {icons[p]}
                     </a>
