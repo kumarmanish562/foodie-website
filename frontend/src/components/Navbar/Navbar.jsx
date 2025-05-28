@@ -9,6 +9,7 @@ import {
   FiShoppingCart,
   FiLogOut,
   FiKey,
+  FiPackage,
 } from 'react-icons/fi';
 import { useCart } from '../../CartContext/CartContext';
 import Login from '../Login/Login';
@@ -48,16 +49,16 @@ const Navbar = () => {
 
   const renderDesktopAuthButton = () => {
     const baseButtonStyles =
-      'px-3 md:px-3 lg:px-6 py-1.5 md:py-2 lg:py-3 bg-gradient-to-br from-green-200 to-green-700 text-[#14532D] rounded-2xl font-bold hover:shadow-lg hover:shadow-green-600/40 transition-all transform hover:scale-[1.02] border-2 border-green-600/20 flex items-center space-x-2 shadow-md shadow-green-900/20 text-xs md:text-sm lg:text-sm';
+      'px-3  lg:px-4 py-1.5  lg:py-2 bg-gradient-to-br from-green-200 to-green-700 text-[#14532D] rounded-2xl font-bold hover:shadow-lg hover:shadow-green-600/40 transition-all transform hover:scale-[1.02] border-2 border-green-600/20 flex items-center space-x-2 shadow-md shadow-green-900/20 text-sm';
 
     return isAuthenticated ? (
       <button onClick={handleLogout} className={baseButtonStyles}>
-        <FiLogOut className="text-base md:text-lg lg:text-lg" />
+        <FiLogOut className="text-base lg:text-lg" />
         <span className="text-shadow">Logout</span>
       </button>
     ) : (
       <button onClick={() => navigate('/login')} className={baseButtonStyles}>
-        <FiKey className="text-base md:text-lg lg:text-lg" />
+        <FiKey className="text-base  lg:text-lg" />
         <span className="text-shadow">Login</span>
       </button>
     );
@@ -91,6 +92,9 @@ const Navbar = () => {
     { name: 'Menu', to: '/menu', icon: <FiBook /> },
     { name: 'About', to: '/about', icon: <FiStar /> },
     { name: 'Contact', to: '/contact', icon: <FiPhone /> },
+    ...(isAuthenticated ? [
+      {name: 'My Orders', to:'my/order',icon:<FiPackage />}
+  ]: [])
   ];
 
   return (

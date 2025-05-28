@@ -62,8 +62,8 @@ const CheckoutPage = () => {
                         
 const statusStyles = {
     processing: {
-        color: 'text-green-400',
-        bg: 'bg-green-900/20',
+        color: 'text-amber-400',
+        bg: 'bg-amber-900/20',
         icon: <FiClock className="text-lg" />,
         label: 'Processing'
     },
@@ -119,14 +119,14 @@ const getPaymentMethodDetails = (method) => {
 };
 
 <tr>
-    <th className="p-4 text-left text-green-400">Order ID</th>
-    <th className="p-4 text-left text-green-400">Customer</th>
-    <th className="p-4 text-left text-green-400">Address</th>
-    <th className="p-4 text-left text-green-400">Items</th>
-    <th className="p-4 text-left text-green-400">Total Items</th>
-    <th className="p-4 text-left text-green-400">Price</th>
-    <th className="p-4 text-left text-green-400">Payment</th>
-    <th className="p-4 text-left text-green-400">Status</th>
+    <th className="p-4 text-left text-amber-400">Order ID</th>
+    <th className="p-4 text-left text-amber-400">Customer</th>
+    <th className="p-4 text-left text-amber-400">Address</th>
+    <th className="p-4 text-left text-amber-400">Items</th>
+    <th className="p-4 text-left text-amber-400">Total Items</th>
+    <th className="p-4 text-left text-amber-400">Price</th>
+    <th className="p-4 text-left text-amber-400">Payment</th>
+    <th className="p-4 text-left text-amber-400">Status</th>
 </tr>
 
 {
