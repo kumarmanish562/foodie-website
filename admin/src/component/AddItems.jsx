@@ -135,7 +135,7 @@ const handleHearts = () =>
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                className={styles.inputField + 'h-32 sm:h-40'}
+                className={styles.inputField + '  h-32 sm:h-40'}
                 placeholder="Enter Product Description"
                 required
               />
@@ -214,7 +214,7 @@ const handleHearts = () =>
                     </button>
                     <input  type='number' name='hearts' 
                   vlaue={formData.hearts} onChange={handleInputChange}
-                  className={ styles.inputField + 'pl-10 sm:pl-12'}
+                  className={ styles.inputField + '  pl-10 sm:pl-12'}
                   placeholder='Enter Likes'
                   min='0'
                   required />

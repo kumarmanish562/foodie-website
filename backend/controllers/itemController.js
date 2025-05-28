@@ -33,7 +33,7 @@ export const getItems = async (_req, res, next) => {
     const items = await itemModal.find().sort({ createdAt: -1 });
     const host = `${_req.protocol}://${_req.get('host')}`;
 
-    const withFullUrl = itemModal.applyTimestamps(i => ({
+    const withFullUrl = items.map(i => ({
       ...i.toObject(),
       imageUrl: i.imageUrl ? host + i.imageUrl : '',
     }));
