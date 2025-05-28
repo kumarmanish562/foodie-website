@@ -14,15 +14,15 @@ export const navLinks = [
 
 // LIST CSS
 export const styles = {
-    pageWrapper: "min-h-screen bg-gradient-to-br from-[#1a120b] via-[#2a1e14] to-[#3e2b1d] py-12 px-4 sm:px-6 lg:px-8",
-    cardContainer: "bg-[#4b3b3b]/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border-2 border-green-500/20",
+    pageWrapper: "min-h-screen bg-gradient-to-br from-[#052512] via-[#033f12] to-[#021a0b] py-12 px-4 sm:px-6 lg:px-8",
+    cardContainer: "bg-[#05472A]/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border-2 border-green-500/20",
     title: "text-3xl font-bold mb-8 bg-gradient-to-r from-green-300 to-green-500 bg-clip-text text-transparent text-center",
     tableWrapper: "overflow-x-auto",
     table: "w-full",
     thead: "bg-[#3a2b2b]/50",
     th: "p-4 text-left text-green-400",
     thCenter: "p-4 text-center text-green-400",
-    tr: "border-b border-green-500/20 hover:bg-[#3a2b2b]/30 transition-colors",
+    tr: "border-b border-green-500/20 hover:bg-[#05472A]/30 transition-colors",
     imgCell: "p-4",
     img: "w-50 h-30 object-contain rounded-lg",
     nameCell: "p-4",
@@ -37,22 +37,22 @@ export const styles = {
     emptyState: "text-center py-12 text-green-100/60 text-xl",
 
     // AddItems styles
-    formWrapper: "min-h-screen bg-gradient-to-br from-[#1a120b] via-[#2a1e14] to-[#3e2b1d] py-10 px-4 sm:px-6 lg:px-8",
-    formCard: "bg-[#4b3b3b]/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-green-500/20",
+    formWrapper: "min-h-screen bg-gradient-to-br from-[#052512] via-[#033f12] to-[#021a0b] py-10 px-4 sm:px-6 lg:px-8",
+    formCard: "bg-[#05472A]/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-green-500/20",
     formTitle: "text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 bg-gradient-to-r from-green-300 to-green-500 bg-clip-text text-transparent text-center",
     uploadWrapper: "flex justify-center",
-    uploadLabel: "w-full max-w-xs sm:w-72 h-56 sm:h-72 bg-[#3a2b2b]/50 border-2 border-dashed border-green-500/30 rounded-2xl cursor-pointer flex items-center justify-center overflow-hidden hover:border-green-400 transition-all",
+    uploadLabel: "w-full max-w-xs sm:w-72 h-56 sm:h-72 bg-[#05472A]/50 border-2 border-dashed border-green-500/30 rounded-2xl cursor-pointer flex items-center justify-center overflow-hidden hover:border-green-400 transition-all",
     uploadIcon: "text-3xl sm:text-4xl text-green-500 mb-2 mx-auto animate-pulse",
     uploadText: "text-green-400 text-sm",
     previewImage: "w-full h-full object-cover",
-    inputField: "w-full bg-[#3a2b2b]/50 border border-green-500/20 rounded-xl px-4 py-3 sm:px-5 sm:py-4 focus:outline-none focus:border-green-400 text-green-100",
+    inputField: "w-full bg-[#05472A]/50 border border-green-500/20 rounded-xl px-4 py-3 sm:px-5 sm:py-4 focus:outline-none focus:border-green-400 text-green-100",
     gridTwoCols: "grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6",
     relativeInput: "relative",
     rupeeIcon: "absolute left-4 top-1/2 -translate-y-1/2 text-green-500 text-lg sm:text-xl",
     actionBtn: "w-full bg-gradient-to-r from-green-600 to-green-700 text-white px-6 sm:px-8 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg transition-all hover:shadow-2xl hover:shadow-green-500/30 hover:scale-[1.02] active:scale-95 mt-6",
 
     // AdminNavbar styles
-    navWrapper: "bg-[#2D1B0E] border-b-8 border-green-900/40 shadow-lg sticky top-0 z-50 font-vibes",
+    navWrapper: "bg-[#05472A] border-b-8 border-green-900/40 shadow-lg sticky top-0 z-50 font-vibes",
     navContainer: "max-w-7xl mx-auto px-4 flex justify-between items-center h-20",
     logoSection: "flex items-center space-x-3",
     logoIcon: "text-4xl text-green-500",
@@ -132,13 +132,13 @@ export const tableClasses = {
     table: 'w-full',
     headerRow: 'bg-[#3a2b2b]/50',
     headerCell: 'p-4 text-left text-green-400',
-    row: 'border-b border-green-500/20 hover:bg-[#3a2b2b]/30 transition-colors group',
+    row: 'border-b border-green-500/20 hover:bg-[#05472A]/30 transition-colors group',
     cellBase: 'p-4',
 };
 
 // Utility classes
 export const layoutClasses = {
-    page: 'min-h-screen bg-gradient-to-br from-[#1a120b] via-[#2a1e14] to-[#3e2b1d] py-12 px-4 sm:px-6 lg:px-8',
-    card: 'bg-[#4b3b3b]/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border-2 border-green-500/20',
+    page: 'min-h-screen bg-gradient-to-br from-[#052512] via-[#033f12] to-[#021a0b] py-12 px-4 sm:px-6 lg:px-8',
+    card: 'bg-[#05472A]/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border-2 border-green-500/20',
     heading: 'text-3xl font-bold mb-8 bg-gradient-to-r from-green-300 to-green-500 bg-clip-text text-transparent text-center',
 };
