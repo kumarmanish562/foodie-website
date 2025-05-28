@@ -35,6 +35,25 @@ const Navbar = () => {
           ))}
         </div>
       </div>
+      {/* For MOBILE VIEW */}
+
+      {menuOpen && (
+        <div className={styles.mobileMenu}>
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.name}
+              to={link.href}
+              onClick={() => setMenuOpen(false)}
+              className={({ isActive }) =>
+                `${styles.navLinkBase} ${isActive ? styles.navLinkActive : styles.navLinkInactive}`
+              }
+            >
+              {link.icon}
+              <span>{link.name}</span>
+            </NavLink>
+          ))}
+        </div>
+      )}
     </nav>
   );
 };
