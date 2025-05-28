@@ -121,7 +121,7 @@ const Order = () => {
                   return (
                     <tr key={order._id} className={tableClasses.row}>
                       {/* Order ID */}
-                      <td className={tableClasses.cellBase + ' font-mono text-sm text-amber-100'}>
+                      <td className={tableClasses.cellBase + ' font-mono text-sm text-green-100'}>
                         #{order._id.slice(-8)}
                       </td>
 
