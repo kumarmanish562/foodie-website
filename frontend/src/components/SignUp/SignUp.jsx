@@ -6,6 +6,8 @@ import { FaCheckCircle, FaEyeSlash, FaEye, FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
+const url = `http://localhost:400`
+
 // Reusable toast component for showing success or status messages
 const AwesomeToast = ({ message, icon }) => (
   <div className='animate-slide-in fixed bottom-6 right-6 flex items-center bg-gradient-to-br from-green-500 to-green-600 px-6 py-4 rounded-lg shadow-lg border-2 border-green-300/20'>
@@ -22,7 +24,7 @@ const AwesomeToast = ({ message, icon }) => (
 const SignUp = () => {
 
   // State to show/hide toast notification
-  const [showToast, setShowToast] = useState(false);
+  const [showToast, setShowToast] = useState({visible: false, message:'', icon:null});
 
   // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
@@ -32,19 +34,27 @@ const SignUp = () => {
 
   // Hook to navigate programmatically
   const navigate = useNavigate();
-
-  // Show toast and redirect to login after 2 seconds
   useEffect(() => {
-    if (showToast) {
+    if(showToast.visible && showToast.message === 'Sign Up Successful'){
       const timer = setTimeout(() => {
-        setShowToast(false);
-        navigate('/login'); // Redirect to login page
-      }, 2000);
-
-      // Cleanup timeout when component unmounts or toast state changes
-      return () => clearTimeout(timer);
+        setShowToast({visible: true, message:'', icon:null})
+        navigate('/login');
+      },2000)
+      return() => clearTimeout(timer)
     }
-  }, [showToast, navigate]);
+  }, [showToast, navigate])
+  // // Show toast and redirect to login after 2 seconds
+  // useEffect(() => {
+  //   if (showToast) {
+  //     const timer = setTimeout(() => {
+  //       setShowToast(false);
+  //       navigate('/login'); // Redirect to login page
+  //     }, 2000);
+
+  //     // Cleanup timeout when component unmounts or toast state changes
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [showToast, navigate]);
 
   // Toggle password visibility on eye icon click
   const toggleShowPassword = () => setShowPassword((prev) => !prev);
@@ -60,8 +70,27 @@ const SignUp = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Sign Up Data:', formData); // For debugging
-    setShowToast(true); // Trigger toast on successful submission
+    console.log('Sign Up fired:', formData)
+    try{
+const res = await axios.post(`${url}/api/user/register`, formData)
+console.log('Register Response:', res.data)
+
+if(res.data.success && res.data.token){
+  localStorage.setItem('authToken', res.data.token)
+  setShowToast({
+    visible: true,
+    message: 'Sign up Successful',
+    icon: <FaCheckCircle/>
+  })
+  return:
+}
+throw new Error(res.data.message || 'Registration failed');
+    }catch(err){
+      console.error('Registration Error', err)
+      const msg = err.response?.data?.message || err.message || 'Registration failed'
+      setShowToast({visible: false, message:msg, icon: <FaCHeckCircle/>})
+
+    }
   };
 
 
