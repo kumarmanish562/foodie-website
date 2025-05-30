@@ -34,60 +34,76 @@ const Login = ({ onLoginSuccess, onClose }) => {
     if (stored) setFormData(JSON.parse(stored));
   }, []);
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
   // Handle form submission
   const handleSubmit = async(e) => {
     e.preventDefault();
     
-    // Add validation
+    // Enhanced validation
     if (!formData.email || !formData.password) {
         setShowToast({ visible: true, message: 'Please fill in all fields', isError: true });
         setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 2000);
         return;
     }
 
+    if (!validateEmail(formData.email)) {
+        setShowToast({ visible: true, message: 'Please enter a valid email address', isError: true });
+        setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 2000);
+        return;
+    }
+
     try {
         console.log('Attempting login to:', `${url}/api/user/login`);
-        console.log('With data:', { email: formData.email, password: '***' });
         
         const res = await axios.post(`${url}/api/user/login`, {
             email: formData.email,
             password: formData.password,
         });
         
-        console.log('Login response:', res)
-    if(res.status === 200 && res.data.success && res.data.token) {
-      localStorage.setItem('authToken', res.data.token)
+        if(res.status === 200 && res.data.success && res.data.token) {
+            localStorage.setItem('authToken', res.data.token);
 
-      // REMEEMBER ME
+            // Remember me functionality - exclude password for security
+            if (formData.rememberMe) {
+                const { password: _unused, ...dataToStore } = formData;
+                localStorage.setItem('loginData', JSON.stringify(dataToStore));
+            } else {
+                localStorage.removeItem('loginData');
+            }
 
-      formData.rememberMe ? localStorage.setItem('loginData', JSON.stringify (formData))
-      : localStorage.removeItem('loginData')
-    setShowToast({ visible: true, message : 'Login Successful', isError:false}) 
-      setTimeout(()=>{
-        setShowToast({ visible: false, message: '', isError: false})
-        onLoginSuccess(res.data.token)
-      },1500)
-  }
-  else{
-    console.warn('Unexpected Err:', res.data)
-    throw new Error(res.data.message || 'Login Failed')
-  }
-    }
-    catch (err){
+            setShowToast({ visible: true, message: 'Login Successful', isError: false });
+            
+            setTimeout(() => {
+                setShowToast({ visible: false, message: '', isError: false });
+                onLoginSuccess(res.data.token);
+            }, 1500);
+        } else {
+            console.warn('Unexpected response:', res.data);
+            throw new Error(res.data.message || 'Login Failed');
+        }
+    } catch (err) {
         console.error('Login error:', err);
         
+        let errorMessage = 'Login Failed';
+        
         if (err.code === 'ECONNREFUSED') {
-            setShowToast({ visible: true, message: 'Server is not running', isError: true });
+            errorMessage = 'Server is not running. Please try again later.';
         } else if (err.response?.status === 404) {
-            setShowToast({ visible: true, message: 'Login endpoint not found', isError: true });
-        } else {
-            const msg = err.response?.data?.message || err.message || 'Login Failed';
-            setShowToast({ visible: true, message: msg, isError: true });
+            errorMessage = 'Login service not found. Please contact support.';
+        } else if (err.response?.status === 401) {
+            errorMessage = 'Invalid email or password.';
+        } else if (err.response?.data?.message) {
+            errorMessage = err.response.data.message;
         }
         
-        setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 2000);
+        setShowToast({ visible: true, message: errorMessage, isError: true });
+        setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 3000);
     }
-  };
+};
  
   // Handle input changes
   const handleChange = ({ target: { name, value, type, checked } }) => {
@@ -104,12 +120,15 @@ const Login = ({ onLoginSuccess, onClose }) => {
     <div className="space-y-6 relative">
       {/* Toast Notification */}
       <div
-        className={`fixed top-4 z-50 transition-all duration-300 ${showToast ? 'translate-y-0 opacity-100' : '-translate-y-20 opacity-0'
-          }`}
+        className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 ${
+          showToast.visible ? 'translate-y-0 opacity-100' : '-translate-y-20 opacity-0'
+        }`}
       >
-        <div className="bg-red-800 text-white px-4 py-3 rounded-md shadow-lg items-center flex gap-2 text-sm">
+        <div className={`px-4 py-3 rounded-md shadow-lg flex items-center gap-2 text-sm ${
+          showToast.isError ? 'bg-red-600 text-white' : 'bg-green-600 text-white'
+        }`}>
           <FaCheckCircle className="flex-shrink-0" />
-          <span>Login Successful</span>
+          <span>{showToast.message}</span>
         </div>
       </div>
 
