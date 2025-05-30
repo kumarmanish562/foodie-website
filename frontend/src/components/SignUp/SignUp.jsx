@@ -5,8 +5,9 @@ import React, { useEffect, useState } from 'react';
 import { FaCheckCircle, FaEyeSlash, FaEye, FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import axios from 'axios'
 
-const url = `http://localhost:400`
+const url = `http://localhost:4000`
 
 // Reusable toast component for showing success or status messages
 const AwesomeToast = ({ message, icon }) => (
@@ -34,6 +35,7 @@ const SignUp = () => {
 
   // Hook to navigate programmatically
   const navigate = useNavigate();
+  
   useEffect(() => {
     if(showToast.visible && showToast.message === 'Sign Up Successful'){
       const timer = setTimeout(() => {
@@ -43,20 +45,7 @@ const SignUp = () => {
       return() => clearTimeout(timer)
     }
   }, [showToast, navigate])
-  // // Show toast and redirect to login after 2 seconds
-  // useEffect(() => {
-  //   if (showToast) {
-  //     const timer = setTimeout(() => {
-  //       setShowToast(false);
-  //       navigate('/login'); // Redirect to login page
-  //     }, 2000);
-
-  //     // Cleanup timeout when component unmounts or toast state changes
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [showToast, navigate]);
-
-  // Toggle password visibility on eye icon click
+  
   const toggleShowPassword = () => setShowPassword((prev) => !prev);
 
   // Handle input field changes and update form state
@@ -68,7 +57,7 @@ const SignUp = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Sign Up fired:', formData)
     try{
@@ -82,13 +71,13 @@ if(res.data.success && res.data.token){
     message: 'Sign up Successful',
     icon: <FaCheckCircle/>
   })
-  return:
+  return
 }
 throw new Error(res.data.message || 'Registration failed');
     }catch(err){
       console.error('Registration Error', err)
       const msg = err.response?.data?.message || err.message || 'Registration failed'
-      setShowToast({visible: false, message:msg, icon: <FaCHeckCircle/>})
+      setShowToast({visible: false, message:msg, icon: <FaCheckCircle/>})
 
     }
   };

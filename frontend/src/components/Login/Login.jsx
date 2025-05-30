@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   FaCheckCircle,
   FaLock,
@@ -10,19 +10,22 @@ import {
 } from "react-icons/fa";
 import { iconClass, inputBase } from '../../assets/dummydata';
 import { Link } from 'react-router-dom';
+import axios from 'axios'
+
+const url = `http://localhost:4000`
 
 const Login = ({ onLoginSuccess, onClose }) => {
   // State to control toast visibility after successful login
-  const [showToast, setShowToast] = useState(false);
+  const [showToast, setShowToast] = useState({visible: false, message:'' , isError: false});
 
   // State to toggle visibility of the password field
   const [showPassword, setShowPassword] = useState(false);
 
   // State to store login form input values
   const [formData, setFormData] = useState({
-    username: '',       // Username input
-    password: '',       // Password input
-    rememberMe: false,  // Checkbox to remember user
+    email: '',          // Change from 'username' to 'email'
+    password: '',
+    rememberMe: false,
   });
 
   // Load saved login data on mount
@@ -32,18 +35,60 @@ const Login = ({ onLoginSuccess, onClose }) => {
   }, []);
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    if (formData.rememberMe) {
-      localStorage.setItem('loginData', JSON.stringify(formData));
-    } else {
-      localStorage.removeItem('loginData');
+    
+    // Add validation
+    if (!formData.email || !formData.password) {
+        setShowToast({ visible: true, message: 'Please fill in all fields', isError: true });
+        setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 2000);
+        return;
     }
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
-    onLoginSuccess();
-  };
 
+    try {
+        console.log('Attempting login to:', `${url}/api/user/login`);
+        console.log('With data:', { email: formData.email, password: '***' });
+        
+        const res = await axios.post(`${url}/api/user/login`, {
+            email: formData.email,
+            password: formData.password,
+        });
+        
+        console.log('Login response:', res)
+    if(res.status === 200 && res.data.success && res.data.token) {
+      localStorage.setItem('authToken', res.data.token)
+
+      // REMEEMBER ME
+
+      formData.rememberMe ? localStorage.setItem('loginData', JSON.stringify (formData))
+      : localStorage.removeItem('loginData')
+    setShowToast({ visible: true, message : 'Login Successful', isError:false}) 
+      setTimeout(()=>{
+        setShowToast({ visible: false, message: '', isError: false})
+        onLoginSuccess(res.data.token)
+      },1500)
+  }
+  else{
+    console.warn('Unexpected Err:', res.data)
+    throw new Error(res.data.message || 'Login Failed')
+  }
+    }
+    catch (err){
+        console.error('Login error:', err);
+        
+        if (err.code === 'ECONNREFUSED') {
+            setShowToast({ visible: true, message: 'Server is not running', isError: true });
+        } else if (err.response?.status === 404) {
+            setShowToast({ visible: true, message: 'Login endpoint not found', isError: true });
+        } else {
+            const msg = err.response?.data?.message || err.message || 'Login Failed';
+            setShowToast({ visible: true, message: msg, isError: true });
+        }
+        
+        setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 2000);
+    }
+  };
+ 
   // Handle input changes
   const handleChange = ({ target: { name, value, type, checked } }) => {
     setFormData((prev) => ({
@@ -70,16 +115,16 @@ const Login = ({ onLoginSuccess, onClose }) => {
 
       {/* Login Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Username Input */}
+        {/* Email Input - Update the name and type */}
         <div className="relative">
           <FaUser className={iconClass} />
           <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={formData.username}
+            type="email"           // Change to email type
+            name="email"           // Change from 'username' to 'email'
+            placeholder="Email"    // Update placeholder
+            value={formData.email} // Change from formData.username
             onChange={handleChange}
-            className={`${inputBase} pl-10 pr-4 py-3 bg-[#011f02]  text-green-100 placeholder-green-400 `}
+            className={`${inputBase} pl-10 pr-4 py-3 bg-[#011f02] text-green-100 placeholder-green-400`}
           />
         </div>
 
