@@ -93,7 +93,7 @@ const Navbar = () => {
     { name: 'About', to: '/about', icon: <FiStar /> },
     { name: 'Contact', to: '/contact', icon: <FiPhone /> },
     ...(isAuthenticated ? [
-      {name: 'My Orders', to:'my/order',icon:<FiPackage />}
+      {name: 'My Orders', to:'myorder',icon:<FiPackage />}
   ]: [])
   ];
 

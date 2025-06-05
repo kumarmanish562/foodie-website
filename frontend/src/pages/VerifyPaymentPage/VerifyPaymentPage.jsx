@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useCart } from '../../context/CartContext';
+import { useCart } from '../../CartContext/CartContext';
 import axios from 'axios';
 
 const VerifyPaymentPage = () => {
