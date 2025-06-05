@@ -1,17 +1,38 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../CartContext/CartContext';
-import { FaMinus, FaPlus, FaTimes, FaTrash } from "react-icons/fa";
+import { FaMinus, FaPlus, FaTimes, FaTrash, FaExclamationTriangle } from "react-icons/fa";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 const CartPage = () => {
-  const { cartItems, removeFromCart, updateQuantity, totalAmount } = useCart();
+  const navigate = useNavigate();
+  const { 
+    cartItems, 
+    removeFromCart, 
+    updateQuantity, 
+    totalAmount, 
+    error, 
+    isAuthenticated 
+  } = useCart();
+  
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [localError, setLocalError] = useState(null);
+
+  // Check authentication on mount
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLocalError('Please login to view your cart');
+      setTimeout(() => {
+        navigate('/login');
+      }, 3000);
+    }
+  }, [isAuthenticated, navigate]);
 
   // Build image URL helper function
   const buildImageUrl = (path) => {
-    if (!path) return '/fallback-image.jpg'; // Provide fallback
+    if (!path) return '/fallback-image.jpg';
     return path.startsWith('http') ? path : `${API_URL}/uploads/${path.replace(/^\/uploads\//, '')}`;
   };
 
@@ -20,19 +41,81 @@ const CartPage = () => {
     e.target.src = '/fallback-image.jpg';
   };
 
-  // Handle quantity decrease
-  const handleDecreaseQuantity = (_id, currentQuantity) => {
-    if (currentQuantity > 1) {
-      updateQuantity(_id, currentQuantity - 1);
-    } else {
-      removeFromCart(_id);
+  // Handle quantity decrease with loading state
+  const handleDecreaseQuantity = async (_id, currentQuantity) => {
+    if (isLoading) return;
+    
+    try {
+      setIsLoading(true);
+      setLocalError(null);
+      
+      if (currentQuantity > 1) {
+        await updateQuantity(_id, currentQuantity - 1);
+      } else {
+        await removeFromCart(_id);
+      }
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      setLocalError('Failed to update quantity. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Handle quantity increase
-  const handleIncreaseQuantity = (_id, currentQuantity) => {
-    updateQuantity(_id, currentQuantity + 1);
+  // Handle quantity increase with loading state
+  const handleIncreaseQuantity = async (_id, currentQuantity) => {
+    if (isLoading) return;
+    
+    try {
+      setIsLoading(true);
+      setLocalError(null);
+      await updateQuantity(_id, currentQuantity + 1);
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      setLocalError('Failed to update quantity. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  // Handle remove item with loading state
+  const handleRemoveItem = async (_id) => {
+    if (isLoading) return;
+    
+    try {
+      setIsLoading(true);
+      setLocalError(null);
+      await removeFromCart(_id);
+    } catch (error) {
+      console.error('Error removing item:', error);
+      setLocalError('Failed to remove item. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleCheckout = () => {
+    if (!isAuthenticated) {
+      setLocalError('Please login to proceed with checkout');
+      navigate('/login');
+      return;
+    }
+    
+    if (cartItems.length === 0) {
+      setLocalError('Your cart is empty');
+      return;
+    }
+    
+    navigate('/checkout');
+  };
+
+  // Show error message component
+  const ErrorMessage = ({ message }) => (
+    <div className='bg-red-900/20 border border-red-800/30 rounded-lg p-4 mb-6 flex items-center gap-3'>
+      <FaExclamationTriangle className='text-red-400 text-lg flex-shrink-0' />
+      <p className='text-red-400'>{message}</p>
+    </div>
+  );
 
   return (
     <div className='min-h-screen overflow-x-hidden py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#041c09] via-[#041c0b] to-[#0a210e]'>
@@ -43,7 +126,32 @@ const CartPage = () => {
           </span>
         </h1>
 
-        {cartItems.length === 0 ? (
+        {/* Error Messages */}
+        {(error || localError) && (
+          <ErrorMessage message={error || localError} />
+        )}
+
+        {/* Loading Overlay */}
+        {isLoading && (
+          <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
+            <div className='bg-green-900/80 p-6 rounded-lg flex items-center gap-3'>
+              <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-green-400'></div>
+              <span className='text-green-100'>Updating cart...</span>
+            </div>
+          </div>
+        )}
+
+        {!isAuthenticated ? (
+          <div className='text-center animate-fade-in'>
+            <p className='text-red-400 text-xl mb-4'>Please login to view your cart</p>
+            <Link
+              to='/login'
+              className='bg-green-700/60 px-8 py-3 rounded-full font-cinzel uppercase tracking-wider hover:bg-green-600/70 transition-all duration-300 text-white inline-flex items-center gap-2'
+            >
+              Go to Login
+            </Link>
+          </div>
+        ) : cartItems.length === 0 ? (
           <div className='text-center animate-fade-in'>
             <p className='text-green-100/80 text-xl mb-4'>Your cart is empty</p>
             <Link
@@ -85,7 +193,8 @@ const CartPage = () => {
                   <div className='flex items-center gap-3'>
                     <button 
                       onClick={() => handleDecreaseQuantity(_id, quantity)}
-                      className='w-8 h-8 rounded-full bg-green-900/40 flex items-center justify-center hover:bg-green-800/50 transition-all duration-300 active:scale-95'
+                      disabled={isLoading}
+                      className='w-8 h-8 rounded-full bg-green-900/40 flex items-center justify-center hover:bg-green-800/50 transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed'
                       aria-label="Decrease quantity"
                     >
                       <FaMinus className='w-3 h-3 text-green-100' />
@@ -97,7 +206,8 @@ const CartPage = () => {
                     
                     <button 
                       onClick={() => handleIncreaseQuantity(_id, quantity)}
-                      className='w-8 h-8 rounded-full bg-green-900/40 flex items-center justify-center hover:bg-green-800/50 transition-all duration-300 active:scale-95'
+                      disabled={isLoading}
+                      className='w-8 h-8 rounded-full bg-green-900/40 flex items-center justify-center hover:bg-green-800/50 transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed'
                       aria-label="Increase quantity"
                     >
                       <FaPlus className='w-3 h-3 text-green-100' />
@@ -106,8 +216,9 @@ const CartPage = () => {
 
                   <div className='flex items-center justify-between w-full'>
                     <button 
-                      onClick={() => removeFromCart(_id)}
-                      className='bg-red-900/40 px-3 py-1 rounded-full font-cinzel text-xs uppercase transition-all duration-300 hover:bg-red-800/50 flex items-center gap-1 active:scale-95'
+                      onClick={() => handleRemoveItem(_id)}
+                      disabled={isLoading}
+                      className='bg-red-900/40 px-3 py-1 rounded-full font-cinzel text-xs uppercase transition-all duration-300 hover:bg-red-800/50 flex items-center gap-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed'
                       aria-label={`Remove ${item.name} from cart`}
                     >
                       <FaTrash className='w-3 h-3 text-red-100' />
@@ -137,7 +248,11 @@ const CartPage = () => {
                   <h2 className='text-3xl font-dancingscript text-green-100'>
                     Total: ₹{Number(totalAmount).toFixed(2)}
                   </h2>
-                  <button className='bg-green-700/60 px-8 py-3 rounded-full font-cinzel uppercase tracking-wider hover:bg-green-600/70 transition-all duration-300 text-white flex items-center gap-2 active:scale-95'>
+                  <button
+                    onClick={handleCheckout}
+                    disabled={isLoading || !isAuthenticated || cartItems.length === 0}
+                    className='bg-green-700/60 px-8 py-3 rounded-full font-cinzel uppercase tracking-wider hover:bg-green-600/70 transition-all duration-300 text-white flex items-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed'
+                  >
                     Checkout Now
                   </button>
                 </div>

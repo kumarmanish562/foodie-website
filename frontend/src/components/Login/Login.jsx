@@ -10,20 +10,16 @@ import {
 } from "react-icons/fa";
 import { iconClass, inputBase } from '../../assets/dummydata';
 import { Link } from 'react-router-dom';
-import axios from 'axios'
+import axios from 'axios';
 
-const url = `http://localhost:4000`
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 const Login = ({ onLoginSuccess, onClose }) => {
-  // State to control toast visibility after successful login
-  const [showToast, setShowToast] = useState({visible: false, message:'' , isError: false});
-
-  // State to toggle visibility of the password field
+  const [showToast, setShowToast] = useState({ visible: false, message: '', isError: false });
   const [showPassword, setShowPassword] = useState(false);
-
-  // State to store login form input values
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',          // Change from 'username' to 'email'
+    email: '',
     password: '',
     rememberMe: false,
   });
@@ -31,81 +27,90 @@ const Login = ({ onLoginSuccess, onClose }) => {
   // Load saved login data on mount
   useEffect(() => {
     const stored = localStorage.getItem('loginData');
-    if (stored) setFormData(JSON.parse(stored));
+    if (stored) {
+      try {
+        const parsedData = JSON.parse(stored);
+        setFormData(prev => ({ ...prev, ...parsedData }));
+      } catch (err) {
+        console.error('Error parsing stored login data:', err);
+        localStorage.removeItem('loginData');
+      }
+    }
   }, []);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
-};
+  };
 
-  // Handle form submission
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (isLoading) return;
     
     // Enhanced validation
     if (!formData.email || !formData.password) {
-        setShowToast({ visible: true, message: 'Please fill in all fields', isError: true });
-        setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 2000);
-        return;
+      setShowToast({ visible: true, message: 'Please fill in all fields', isError: true });
+      setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 2000);
+      return;
     }
 
     if (!validateEmail(formData.email)) {
-        setShowToast({ visible: true, message: 'Please enter a valid email address', isError: true });
-        setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 2000);
-        return;
+      setShowToast({ visible: true, message: 'Please enter a valid email address', isError: true });
+      setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 2000);
+      return;
     }
 
     try {
-        console.log('Attempting login to:', `${url}/api/user/login`);
-        
-        const res = await axios.post(`${url}/api/user/login`, {
-            email: formData.email,
-            password: formData.password,
-        });
-        
-        if(res.status === 200 && res.data.success && res.data.token) {
-            localStorage.setItem('authToken', res.data.token);
+      setIsLoading(true);
+      console.log('Attempting login to:', `${API_URL}/api/user/login`);
+      
+      const res = await axios.post(`${API_URL}/api/user/login`, {
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+      });
+      
+      if (res.status === 200 && res.data.success && res.data.token) {
+        localStorage.setItem('authToken', res.data.token);
 
-            // Remember me functionality - exclude password for security
-            if (formData.rememberMe) {
-                const { password: _unused, ...dataToStore } = formData;
-                localStorage.setItem('loginData', JSON.stringify(dataToStore));
-            } else {
-                localStorage.removeItem('loginData');
-            }
-
-            setShowToast({ visible: true, message: 'Login Successful', isError: false });
-            
-            setTimeout(() => {
-                setShowToast({ visible: false, message: '', isError: false });
-                onLoginSuccess(res.data.token);
-            }, 1500);
+        // Remember me functionality
+        if (formData.rememberMe) {
+          const { password: _unused, ...dataToStore } = formData;
+          localStorage.setItem('loginData', JSON.stringify(dataToStore));
         } else {
-            console.warn('Unexpected response:', res.data);
-            throw new Error(res.data.message || 'Login Failed');
+          localStorage.removeItem('loginData');
         }
+
+        setShowToast({ visible: true, message: 'Login Successful', isError: false });
+        
+        setTimeout(() => {
+          setShowToast({ visible: false, message: '', isError: false });
+          onLoginSuccess(res.data.token);
+        }, 1500);
+      } else {
+        throw new Error(res.data.message || 'Login Failed');
+      }
     } catch (err) {
-        console.error('Login error:', err);
-        
-        let errorMessage = 'Login Failed';
-        
-        if (err.code === 'ECONNREFUSED') {
-            errorMessage = 'Server is not running. Please try again later.';
-        } else if (err.response?.status === 404) {
-            errorMessage = 'Login service not found. Please contact support.';
-        } else if (err.response?.status === 401) {
-            errorMessage = 'Invalid email or password.';
-        } else if (err.response?.data?.message) {
-            errorMessage = err.response.data.message;
-        }
-        
-        setShowToast({ visible: true, message: errorMessage, isError: true });
-        setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 3000);
+      console.error('Login error:', err);
+      
+      let errorMessage = 'Login Failed';
+      if (err.code === 'ECONNREFUSED') {
+        errorMessage = 'Server is not running. Please try again later.';
+      } else if (err.response?.status === 404) {
+        errorMessage = 'User not found.';
+      } else if (err.response?.status === 401) {
+        errorMessage = 'Invalid email or password.';
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      
+      setShowToast({ visible: true, message: errorMessage, isError: true });
+      setTimeout(() => setShowToast({ visible: false, message: '', isError: false }), 3000);
+    } finally {
+      setIsLoading(false);
     }
-};
+  };
  
-  // Handle input changes
   const handleChange = ({ target: { name, value, type, checked } }) => {
     setFormData((prev) => ({
       ...prev,
@@ -113,7 +118,6 @@ const Login = ({ onLoginSuccess, onClose }) => {
     }));
   };
 
-  // Toggle password visibility
   const toggleShowPassword = () => setShowPassword((prev) => !prev);
 
   return (
@@ -134,16 +138,17 @@ const Login = ({ onLoginSuccess, onClose }) => {
 
       {/* Login Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Email Input - Update the name and type */}
+        {/* Email Input */}
         <div className="relative">
           <FaUser className={iconClass} />
           <input
-            type="email"           // Change to email type
-            name="email"           // Change from 'username' to 'email'
-            placeholder="Email"    // Update placeholder
-            value={formData.email} // Change from formData.username
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
             onChange={handleChange}
             className={`${inputBase} pl-10 pr-4 py-3 bg-[#011f02] text-green-100 placeholder-green-400`}
+            required
           />
         </div>
 
@@ -156,7 +161,8 @@ const Login = ({ onLoginSuccess, onClose }) => {
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
-            className={`${inputBase} pl-10 pr-4 py-3 bg-[#011f02]  text-green-100 placeholder-green-400 `}
+            className={`${inputBase} pl-10 pr-4 py-3 bg-[#011f02] text-green-100 placeholder-green-400`}
+            required
           />
           <button
             type="button"
@@ -166,7 +172,8 @@ const Login = ({ onLoginSuccess, onClose }) => {
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
         </div>
-        {/* // Checkbox for "Remember me" option */}
+
+        {/* Remember me checkbox */}
         <div className='flex items-center'>
           <label className='flex items-center'>
             <input
@@ -174,18 +181,20 @@ const Login = ({ onLoginSuccess, onClose }) => {
               name="rememberMe"
               checked={formData.rememberMe}
               onChange={handleChange}
-              className='from-checkbox h-5 w-5 text-green-600 bg-[#011f02]  border-green-400 rounded focus:ring-green-600'
+              className='h-5 w-5 text-green-600 bg-[#011f02] border-green-400 rounded focus:ring-green-600'
             />
             <span className='ml-2 text-green-100'>Remember me</span>
           </label>
         </div>
+
         {/* Submit Button */}
         <button
-          className='w-full py-3 bg-gradient-to-r from-green-400 to-green-600 text-[#022709] font-bold rounded-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform'
+          type="submit"
+          disabled={isLoading}
+          className='w-full py-3 bg-gradient-to-r from-green-400 to-green-600 text-[#022709] font-bold rounded-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform disabled:opacity-50 disabled:hover:scale-100'
         >
-          Sign In <FaArrowRight />
+          {isLoading ? 'Signing In...' : 'Sign In'} <FaArrowRight />
         </button>
-
       </form>
 
       {/* Link to Sign Up page */}
