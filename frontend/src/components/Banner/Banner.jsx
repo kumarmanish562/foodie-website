@@ -46,10 +46,7 @@ const Banner = () => {
             </form>
 
             <div className='flex flex-wrap gap-4 justify-center md:justify-start mt-6'>
-              <button className='group flex items-center gap-3 bg-green-800/30 px-6 py-3 rounded-xl transition-all duration-300 border-2 border-green-700/50 hover:hover:border-green-400 backdrop-blur-sm'>
-              <FaDownload className='text-xl text-green-400 from-green-400 to-red-300 group-hover:animate-bounce' />
-              <span className='text-lg'>Download App</span>
-              </button>
+          
               <button onClick={() => setShowVideo(true)}className='group flex items-center gap-3 bg-gradient-to-r from-green-400 to-green-300 hover:from-green-300 hover:to-green-200 px-6 py-3 rounded-xl transition-all duration-300 shadow-lg 
               hover:shadow-green-300/30'>
                 <FaPlay className='text-xl text-green-900' />
