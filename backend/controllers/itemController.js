@@ -1,55 +1,74 @@
-import itemModal from "../modals/itemModal.js";
+import Item from "../modals/itemModal.js"; // Use modals, not models
+import fs from "fs";
 
-export const createItem = async (req, res, next) => {
+// Add Item
+export const addItem = async (req, res) => {
   try {
-    const { name, description, category, price, rating = 0, hearts = 0 } = req.body;
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
-    const total = Number(price) * 1;
+    let image_filename = req.file?.filename;
 
-    const newItem = new itemModal({
-      name,
-      description,
-      category,
-      price,
-      rating,
-      hearts,
-      imageUrl,
-      total,
+    const item = new Item({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      category: req.body.category,
+      imageUrl: image_filename,
     });
 
-    const saved = await newItem.save();
-    res.status(201).json(saved);
-  } catch (err) {
-    if (err.code === 11000) {
-      res.status(400).json({ message: 'Item name already exists' });
-    } else {
-      next(err);
+    await item.save();
+    res.json({ success: true, message: "Item Added Successfully" });
+  } catch (error) {
+    console.error("AddItem Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error adding item",
+      error: error.message,
+    });
+  }
+};
+
+// List Items
+export const listItem = async (req, res) => {
+  try {
+    const items = await Item.find({});
+    res.json({ success: true, data: items });
+  } catch (error) {
+    console.error("ListItem Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching items",
+      error: error.message,
+    });
+  }
+};
+
+// Remove Item
+export const removeItem = async (req, res) => {
+  try {
+    const item = await Item.findById(req.body.id);
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "Item not found",
+      });
     }
-  }
-};
 
-export const getItems = async (_req, res, next) => {
-  try {
-    const items = await itemModal.find().sort({ createdAt: -1 });
-    const host = `${_req.protocol}://${_req.get('host')}`;
+    // Remove image file if it exists
+    if (item.imageUrl) {
+      try {
+        fs.unlinkSync(`uploads/${item.imageUrl}`);
+      } catch (error) {
+        console.error("Error removing image file:", error);
+      }
+    }
 
-    const withFullUrl = items.map(i => ({
-      ...i.toObject(),
-      imageUrl: i.imageUrl ? host + i.imageUrl : '',
-    }));
-
-    res.json(withFullUrl);
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const deleteItem = async (req, res, next) => {
-  try {
-    const removed = await itemModal.findByIdAndDelete(req.params.id);
-    if (!removed) return res.status(404).json({ message: "Item not found" });
-    res.status(204).end();
-  } catch (err) {
-    next(err);
+    await Item.findByIdAndDelete(req.body.id);
+    res.json({ success: true, message: "Item Removed Successfully" });
+  } catch (error) {
+    console.error("RemoveItem Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error removing item",
+      error: error.message,
+    });
   }
 };
